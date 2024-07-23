@@ -8,7 +8,7 @@ interface Address {
 }
 
 /**
- * Fetches Bitwise's ETHW Ethereum addresses.
+ * Fetches and resolves Bitwise's ETHW ENS addresses.
  * @returns A promise that resolves to an array of Address objects.
  */
 async function getEthwAddresses(): Promise<Address[]> {
