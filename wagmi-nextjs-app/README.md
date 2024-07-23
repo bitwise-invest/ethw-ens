@@ -1,6 +1,6 @@
-# ETHW ENS
+# wagmi-nextjs-app
 
-Find and resolve ETHW addresses with ENS subnames `[?].ethw.bitwise.eth` where `[?]` is a number starting from 1
+This example showcases resolving Bitwise's ETHW ENS addresses using [wagmi](https://wagmi.sh/) in a [NextJS](https://nextjs.org/) app.
 
 ## Developing
 
