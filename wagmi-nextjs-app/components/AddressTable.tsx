@@ -14,10 +14,10 @@ export function AddressTable() {
   const [loading, setLoading] = useState(true);
   const [stopFetching, setStopFetching] = useState(false);
 
-  const ETHW_ENS = "ethw.bitwise.eth";
+  const ETHW_ENS_PARENT = "ethw.bitwise.eth";
 
   const { data: fetchedAddress, error } = useEnsAddress({
-    name: `${prefix}.${ETHW_ENS}`,
+    name: `${prefix}.${ETHW_ENS_PARENT}`,
     chainId: mainnet.id,
   });
 
@@ -31,7 +31,7 @@ export function AddressTable() {
         setEnsAddresses((prev) => [
           ...prev,
           {
-            name: `${prefix}.${ETHW_ENS}`,
+            name: `${prefix}.${ETHW_ENS_PARENT}`,
             address: fetchedAddress,
           },
         ]);
