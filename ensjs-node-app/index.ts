@@ -1,10 +1,16 @@
-import { http } from "viem";
+import {
+  http,
+  createPublicClient,
+  formatEther,
+  Address as ViemAddress,
+} from "viem";
 import { mainnet } from "viem/chains";
 import { createEnsPublicClient } from "@ensdomains/ensjs";
 
 interface Address {
   name: string;
   address: string;
+  balance: string;
 }
 
 /**
@@ -13,7 +19,11 @@ interface Address {
  */
 async function getEthwAddresses(): Promise<Address[]> {
   const ETHW_ENS_PARENT = "ethw.bitwise.eth";
-  const client = createEnsPublicClient({
+  const client = createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  });
+  const ensClient = createEnsPublicClient({
     chain: mainnet,
     transport: http(),
   });
@@ -25,7 +35,12 @@ async function getEthwAddresses(): Promise<Address[]> {
   do {
     prefix++;
     try {
-      address = await getAddressRecord(prefix, ETHW_ENS_PARENT, client);
+      address = await getAddressRecord(
+        prefix,
+        ETHW_ENS_PARENT,
+        client,
+        ensClient
+      );
       if (address && address.address) {
         payload.push(address);
       }
@@ -48,13 +63,18 @@ async function getEthwAddresses(): Promise<Address[]> {
 async function getAddressRecord(
   prefix: number,
   parentDomain: string,
-  client: ReturnType<typeof createEnsPublicClient>
+  client: ReturnType<typeof createPublicClient>,
+  ensClient: ReturnType<typeof createEnsPublicClient>
 ): Promise<Address> {
   const name = `${prefix}.${parentDomain}`;
-  const record = await client.getAddressRecord({ name });
+  const record = await ensClient.getAddressRecord({ name });
+  const balance = record
+    ? await client.getBalance({ address: record.value as ViemAddress })
+    : BigInt(0);
   return {
     name,
     address: record ? record.value : "",
+    balance: formatEther(balance),
   };
 }
 
