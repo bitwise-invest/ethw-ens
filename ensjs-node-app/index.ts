@@ -1,9 +1,4 @@
-import {
-  http,
-  createPublicClient,
-  formatEther,
-  Address as ViemAddress,
-} from "viem";
+import { http, createPublicClient, Address as ViemAddress } from "viem";
 import { mainnet } from "viem/chains";
 import { createEnsPublicClient } from "@ensdomains/ensjs";
 
