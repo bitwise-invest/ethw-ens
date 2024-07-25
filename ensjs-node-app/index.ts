@@ -10,7 +10,7 @@ import { createEnsPublicClient } from "@ensdomains/ensjs";
 interface Address {
   name: string;
   address: string;
-  balance: string;
+  balance: bigint;
 }
 
 /**
@@ -74,7 +74,7 @@ async function getAddressRecord(
   return {
     name,
     address: record ? record.value : "",
-    balance: formatEther(balance),
+    balance: balance,
   };
 }
 
