@@ -1,12 +1,23 @@
 import { useEffect, useState } from "react";
 
 import { useEnsAddress } from "wagmi";
+import { http, createConfig, getBalance } from "@wagmi/core";
 import { mainnet } from "@wagmi/core/chains";
+
+import { formatEther } from "viem";
 
 interface Address {
   name: string;
   address: string;
+  balance: bigint;
 }
+
+const viemConfig = createConfig({
+  chains: [mainnet],
+  transports: {
+    [mainnet.id]: http(),
+  },
+});
 
 export function AddressTable() {
   const [prefix, setPrefix] = useState(1);
@@ -28,11 +39,17 @@ export function AddressTable() {
     // Update state and increment prefix otherwise
     const fetchAddress = async () => {
       if (fetchedAddress) {
+        const balance = (
+          await getBalance(viemConfig, {
+            address: fetchedAddress,
+          })
+        ).value;
         setEnsAddresses((prev) => [
           ...prev,
           {
             name: `${prefix}.${ETHW_ENS_PARENT}`,
             address: fetchedAddress,
+            balance: balance,
           },
         ]);
         setPrefix((prevPrefix) => prevPrefix + 1);
@@ -63,6 +80,7 @@ export function AddressTable() {
           <tr className="bg-white text-black">
             <th className="text-left">ENS</th>
             <th className="text-left">Address</th>
+            <th className="text-left">Balance</th>
           </tr>
         </thead>
         <tbody>
@@ -77,6 +95,7 @@ export function AddressTable() {
                   {address.address}
                 </a>
               </td>
+              <td>{formatEther(address.balance)}</td>
             </tr>
           ))}
         </tbody>
